@@ -6,38 +6,34 @@
 #include <string.h>
 
 // ********** Basic bit operations **********
-unsigned int SetBits(unsigned int num,  int index) {    // Set bit to 1
-    if (index <= 31 && index >= 0) { // Verifies index is valid
-        return num | (1 << index);
+unsigned long long SetBit(unsigned long long num,  int index) {    // Set bit to 1
+    if (index <= 63 && index >= 0) { // Verifies index is valid
+        return num | (1ULL << index);
     }
     return num; // Does nothing if the index is invalid
 }
 
-unsigned int ClearBit(unsigned int num,  int index) {   // Set bit to 0
-    if (index <= 31 && index >= 0) { // Verifies index is valid
-        return num & ~(1 << index);
+unsigned long long ClearBit(unsigned long long num,  int index) {   // Set bit to 0
+    if (index <= 63 && index >= 0) { // Verifies index is valid
+        return num & ~(1ULL << index);
     }
     return num; // Does nothing if the index is invalid
 }
 
-unsigned int ToggleBit(unsigned int num,  int index) {  // Flip bit
-    if (index > 31 || index < 0) { // Checks if index is invalid
+unsigned long long ToggleBit(unsigned long long num,  int index) {  // Flip bit
+    if (index > 63 || index < 0) { // Checks if index is invalid
         return -1; // Returns bad value if the index is invalid
     }
 
-    if (num & (1 << index)) { // Returns true if the bit at index is 1
-        return ClearBit(num, index);
-    }
-
-    return SetBits(num, index);
+    return num ^ (1ULL << index);
 }
 
-int GetBit(unsigned int num,  int index) {  // Get bit value
-    if (index > 31 || index < 0) { // Checks if index is invalid
+int GetBit(unsigned long long num,  int index) {  // Get bit value
+    if (index > 63 || index < 0) { // Checks if index is invalid
         return -1; // Returns bad value if the index is invalid
     }
 
-    if (num & (1 << index)) { // Returns true if the bit at index is 1
+    if (num & (1ULL << index)) { // Returns true if the bit at index is 1
         return 1;
     }
 
@@ -45,7 +41,7 @@ int GetBit(unsigned int num,  int index) {  // Get bit value
 }
 
 // ********** Counting and finding **********
-int CountBits(unsigned int num) {   // Count 1s
+int CountBits(unsigned long long num) {   // Count 1s
     int count = 0;
     for (int i = 0; i < 32; i++) {
         if (GetBit(num, i)) {
@@ -56,30 +52,31 @@ int CountBits(unsigned int num) {   // Count 1s
 }
 
 // ********** Display Functions **********
-void PrintBinary(unsigned int num) {  // Show in bits
+void PrintBinary(unsigned long long num) {  // Show in bits
     // Most of this code was yoinked from Assignment 2
-    char bin[33];
+    char bin[65];
 
-    for (int i = 31; i >= 0; i--) { // Convert to 32 bit binary
-        bin[31-i] = ((num >> i) & 1) ? '1' : '0';
+    for (int i = 63; i >= 0; i--) { // Convert to 32 bit binary
+        bin[63-i] = ((num >> i) & 1) ? '1' : '0';
     }
 
-    bin[32] = '\0'; // Null terminate the string
+    bin[64] = '\0'; // Null terminate the string
 
-    printf("%d in binary is %s", num, bin);
+    printf("%d in binary is %s\n", num, bin);
 }
 
-void PrintHex(unsigned int num) {   // Show in hex
+void PrintHex(unsigned long long num) {   // Show in hex
     // Most of this code was yoinked from Assignment 1
-    char hex[33];
+    char hex[65];
     int base = 16;
 
-    char temp[65];      // Temporary buffer
+    char temp[99];      // Temporary buffer
     int pos = 0;
 
     // Handle zero case
     if (num == 0) {
         strcpy(hex, "0");
+        printf("%d in hexadecimal is %s", num, hex);
         return;
     }
 
