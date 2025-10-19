@@ -1,6 +1,9 @@
 #include <stdio.h>
 
+void PrintBinary(unsigned int num);
+
 int main(void) {
-    printf("Hello, World!\n");
-    return 0;
+    int num = 0    ;
+    PrintBinary(num);
+
 }

@@ -25,11 +25,13 @@ unsigned int ToggleBit(unsigned int num,  int index) {  // Flip bit
         return -1; // Returns bad value if the index is invalid
     }
 
-    if (num & (1 << index)) { // Returns true if the bit at index is 1
-        return ClearBit(num, index);
-    }
+    return num ^ (1 << index);
 
-    return SetBits(num, index);
+    // if (num & (1 << index)) { // Returns true if the bit at index is 1
+    //     return ClearBit(num, index);
+    // }
+    //
+    // return SetBits(num, index);
 }
 
 int GetBit(unsigned int num,  int index) {  // Get bit value
