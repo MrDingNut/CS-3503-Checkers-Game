@@ -3,9 +3,9 @@
 
 // Base Functions
 // Remove if you don't use them in Main
-void SetBit(unsigned long long num,  int index);
-void ClearBit(unsigned long long num,  int index);
-void ToggleBit(unsigned long long num,  int index);
+void SetBit(unsigned long long *num,  int index);
+void ClearBit(unsigned long long *num,  int index);
+void ToggleBit(unsigned long long *num,  int index);
 int GetBit(unsigned long long num,  int index);
 int CountBits(unsigned long long num);
 void PrintBinary(unsigned long long num);
@@ -40,18 +40,25 @@ int main(void) {
     unsigned long long blackKings = 0;
 
     // Set up the board
-    SetBoard(&board);
-    SetRedPieces(&redPieces);
-    SetBlackPieces(&blackPieces);
+    // SetBoard(&board);
+    // SetRedPieces(&redPieces);
+    // SetBlackPieces(&blackPieces);
+
+    SetBit(&board, 19);
+    SetBit(&blackPieces, 19);
+
+    SetBit(&board, 54);
+    SetBit(&redPieces, 54);
+    // SetBit(&redKings, 28);
 
     PrintBoardIndex();
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
-    char oldSpace[50] = "C3\0";
-    char newSpace[50] = "B4\0";
+    char oldSpace[50] = "b7\0";
+    char newSpace[50] = "a8\0";
 
     printf("Trying to move piece from %s to %s\n", oldSpace, newSpace);
-    MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
+    MovePiece(oldSpace, newSpace, 0, &board, &redPieces, &redKings, &blackPieces, &blackKings);
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
     strcpy(oldSpace, "b4\0");
@@ -61,35 +68,4 @@ int main(void) {
     MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
-    // board = SetBit(board,  0);
-    // board = SetBit(board,  63);
-
-    // PrintBinary(board);
-
-    // if (GetBit(board, 63)) {
-    //     printf("Got it");
-    // }
-
-    // redPieces = SetBit(redPieces,  0);
-    // blackPieces = SetBit(blackPieces,  63);
-    //
-
-
-    //
-    // printf("Board: ");
-    // PrintBinary(board);
-    //
-    // printf("\nRed Pieces: ");
-    // PrintBinary(redPieces);
-    //
-    // printf("\nRed Kings: ");
-    // PrintBinary(redKings);
-    //
-    // printf("\nBlack Pieces: ");
-    // PrintBinary(blackPieces);
-    //
-    // printf("\nBlack Kings: ");
-    // PrintBinary(blackKings);
-    //
-    // printf("\n%d", ('1' - '0'));
 }
