@@ -164,12 +164,6 @@ void SetBlackPieces(unsigned long long *blackPieces) {
    SetBit(blackPieces,  40);
 }
 
-void MoveRedPiece(unsigned long long *board,
-    unsigned long long *pieces,
-    unsigned long long *kings) {
-
-}
-
 // Converts space name (eg. C7) to the index of the corresponding bit for the bitboards
 int Space2Index(char space[]) {
     char letter = space[0];         // Gets the letter from the space name
@@ -208,43 +202,61 @@ int IsValidLocation(int idx) {
     return 0;
 }
 
-// Moves the piece
-int MovePiece(char oldSpace[], char newSpace[],
+// Moves a red piece
+int MoveRedPiece(char oldSpace[], char newSpace[],
     unsigned long long *board,
     unsigned long long *pieces,
     unsigned long long *kings) {
-    if (IsValidSpace(oldSpace) && IsValidSpace(newSpace)) { // Verifies both spaces are valid
-        int oldIdx = Space2Index(oldSpace);
-        int newIdx = Space2Index(newSpace);
-        if (GetBit(*board, oldIdx)) { // Verifies there's a piece on the old space
-            if (abs(oldIdx - newIdx) == 9 || abs(oldIdx - newIdx) == 7) { // Verifies the new space is a valid move
-                if (IsValidLocation(newIdx)) {
-                    ClearBit(board, oldIdx);
-                    ClearBit(pieces, newIdx);
 
-                    SetBit(board, newIdx);
-                    SetBit(pieces, newIdx);
+    int oldIdx = Space2Index(oldSpace);
+    int newIdx = Space2Index(newSpace);
 
-                    return 1;
-                } else {
-                    printf("Moving from %s to %s is an invalid move2\n", oldSpace, newSpace);
-                    return 0;
-                }
-            } else {
-                printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
-                return 0;
-            }
-
-        } else {
-            printf("There's no piece on space %s\n", oldSpace);
-            return 0;
-        }
-
-    } else {
-        printf("Invalid Space\n");
-
+    // Verifies both spaces are valid
+    if (IsValidSpace(oldSpace) && IsValidSpace(newSpace)) {
+        printf("One or more of the entered spaces are invalid");
+        return 0;
     }
+
+    // Returns 0 us there's not a piece on the old space
+    if (~GetBit(*board, oldIdx)) {
+        printf("There's no piece on space %s\n", oldSpace);
+        return 0; }
+
+    // Returns 0 if the new space is not valid
+    if (~IsValidLocation(newIdx)) {
+        printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
+        return 0; }
+
+    // Checks if the piece is a king
+    if (GetBit(*kings, oldIdx)) {
+        if (abs(newIdx - oldIdx) == 9 || abs(newIdx - oldIdx) == 7) { // Verifies the new space is a valid move
+            ClearBit(board, oldIdx);
+            ClearBit(kings, newIdx);
+
+            SetBit(board, newIdx);
+            SetBit(kings, newIdx);
+
+            return 1;
+        }
+        printf("Moving from %s to %s is an invalid move", oldSpace, newSpace);
+        return 0;
+    }
+
+
+    // Verifies the new space is a valid move
+    if (newIdx - oldIdx == 9 || newIdx - oldIdx == 7) {
+        ClearBit(board, oldIdx);
+        ClearBit(pieces, newIdx);
+
+        SetBit(board, newIdx);
+        SetBit(pieces, newIdx);
+
+        return 1;
+    }
+    printf("Moving from %s to %s is an invalid move", oldSpace, newSpace);
     return 0;
 }
+
+
 
 #endif

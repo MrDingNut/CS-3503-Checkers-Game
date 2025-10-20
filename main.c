@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 // Base Functions
 // Remove if you don't use them in Main
@@ -22,7 +23,7 @@ void SetRedPieces(unsigned long long *redPieces);
 void SetBlackPieces(unsigned long long *blackPieces);
 int Space2Index(char space[]);
 int IsValidSpace(char space[]);
-int MovePiece(char oldSpace[], char newSpace[],
+int MoveRedPiece(char oldSpace[], char newSpace[],
     unsigned long long *board,
     unsigned long long *pieces,
     unsigned long long *kings);
@@ -43,10 +44,16 @@ int main(void) {
     PrintBoardIndex();
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
-    char oldSpace[] = "a3\0";
-    char newSpace[] = "h3\0";
+    char oldSpace[50] = "C3\0";
+    char newSpace[50] = "B4\0";
 
-    MovePiece(oldSpace, newSpace, &board, &redPieces, &redKings);
+    MoveRedPiece(oldSpace, newSpace, &board, &redPieces, &redKings);
+    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+
+    strcpy(oldSpace, "b4\0");
+    strcpy(newSpace, "c3\0");
+
+    MoveRedPiece(oldSpace, newSpace, &board, &redPieces, &redKings);
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
     // board = SetBit(board,  0);
