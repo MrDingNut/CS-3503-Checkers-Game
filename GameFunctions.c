@@ -47,13 +47,17 @@ void PrintPiece(int idx, unsigned long long redPieces,
     unsigned long long blackPieces,
     unsigned long long blackKings) {
     if (GetBit(redPieces, idx)) {
-        printf("m");
-    } if (GetBit(redKings, idx)) {
-        printf("M");
-    } if (GetBit(blackPieces, idx)) {
-        printf("w");
-    } if (GetBit(blackKings, idx)) {
-        printf("W");
+        if (GetBit(redKings, idx)) {
+            printf("M");
+        } else {
+            printf("m");
+        }
+    }  if (GetBit(blackPieces, idx)) {
+            if (GetBit(blackKings, idx)) {
+            printf("W");
+        } else {
+            printf("w");
+        }
     }
 }
 
@@ -164,7 +168,7 @@ void SetBlackPieces(unsigned long long *blackPieces) {
    SetBit(blackPieces,  40);
 }
 
-// Converts space name (eg. C7) to the index of the corresponding bit for the bitboards
+// Converts space name (e.g. C7) to the index of the corresponding bit for the bitboards
 int Space2Index(char space[]) {
     char letter = space[0];         // Gets the letter from the space name
     letter      = toupper(letter);  // Forces the letter to be uppercase. Allows the input to be case independent
@@ -203,61 +207,152 @@ int IsValidLocation(int idx) {
 }
 
 // Moves a red piece
-int MoveRedPiece(char oldSpace[], char newSpace[],
+int MovePiece(char oldSpace[], char newSpace[],
+    int isRed,
     unsigned long long *board,
-    unsigned long long *pieces,
-    unsigned long long *kings) {
+    unsigned long long *friendlyPieces,
+    unsigned long long *friendlyKings,
+    unsigned long long *opponentPieces,
+    unsigned long long *opponentKings) {
 
     int oldIdx = Space2Index(oldSpace);
     int newIdx = Space2Index(newSpace);
 
-    // Returns 0 if either space is invalid
-    if ((IsValidSpace(oldSpace) - 1)  || (IsValidSpace(newSpace) - 1)) {
-        printf("One or more of the entered spaces are invalid\n");
-        return 0;
+    int moveDistance = newIdx - oldIdx;
+
+    // Set the direction multiplier for the separate pieces
+    int direction = -1;
+    if (isRed) {
+        direction = 1;
     }
 
+    // Returns 0 if the old space name is invalid
+    if (!IsValidSpace(oldSpace)) {
+        printf("%s is not a valid space name\n", oldSpace);
+        return 0; }
+
+    // Returns 0 if the new space name is invalid
+    if (!IsValidSpace(newSpace)) {
+        printf("%s is not a valid space name\n", newSpace);
+        return 0; }
+
     // Returns 0 us there's not a piece on the old space
-    if (GetBit(*board, oldIdx) - 1) {
+    if (!GetBit(*board, oldIdx)) {
         printf("There's no piece on space %s\n", oldSpace);
         return 0; }
 
     // Returns 0 if the new space is not valid
-    if (IsValidLocation(newIdx) - 1) {
+    if (!IsValidLocation(newIdx)) {
         printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
         return 0; }
 
-    // Checks if the piece is a king
-    if (GetBit(*kings, oldIdx)) {
-        // Verifies the new space is a valid move for a king
-        if (abs(newIdx - oldIdx) == 9 || abs(newIdx - oldIdx) == 7) {
-            ClearBit(board, oldIdx);
-            ClearBit(kings, newIdx);
-
-            SetBit(board, newIdx);
-            SetBit(kings, newIdx);
-
-            return 1;
+    // Returns 0 if the piece isn't a king and is moving in the wrong direction
+    if (!GetBit(*friendlyKings, oldIdx)) { // Fires if the piece isn't a king
+        if (moveDistance * direction < 0) { // Fires if the piece is moving in the wrong direction (red must move up, black must move down)
+            printf("The piece on space %s cannot move in that direction\n", oldSpace);
+            return 0;
         }
-        printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
+    }
+
+    // Returns 0 if the piece cannot move to the new space
+    if (!(abs(moveDistance) == 9 || abs(moveDistance) == 7 || abs(moveDistance) == 18 || abs(moveDistance) == 14)) {
+        printf("The piece on %s cannot move to %s\n", oldSpace, newSpace);
         return 0;
     }
 
-
-    // Verifies the new space is a valid move for a regular piece
-    if (newIdx - oldIdx == 9 || newIdx - oldIdx == 7) {
-        ClearBit(board, oldIdx);
-        ClearBit(pieces, newIdx);
-
-        SetBit(board, newIdx);
-        SetBit(pieces, newIdx);
-
-        return 1;
+    // Returns 0 if the new space is taken
+    if (GetBit(*board, newIdx)) {
+        printf("%s is note an open space");
+        return 0;
     }
-    printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
-    return 0;
+
+    // Capture protocol
+    if (moveDistance > 9) {
+        int midIdx = (oldIdx + oldIdx) / 2;
+
+        // Returns 0 if the space being jumped isn't occupied by the opponent
+        if (!GetBit(*opponentPieces, midIdx)) {
+            printf("You cannot move to %s because you aren't jumping over your opponent's piece", newSpace);
+            return 0;
+        }
+
+        // Move and remove the appropriate pieces
+        SetBit(board, newIdx);
+        SetBit(friendlyPieces, newIdx);
+
+        ClearBit(board, oldIdx);
+        ClearBit(friendlyPieces, oldIdx);
+        ClearBit(board, midIdx);
+        ClearBit(opponentPieces, midIdx);
+        ClearBit(opponentPieces, midIdx);
+
+        if (GetBit(*friendlyKings, oldIdx)) {
+            SetBit(friendlyPieces, newIdx);
+            ClearBit(friendlyKings, oldIdx);
+        }
+    }
+
+    // Regular move
+    if (moveDistance <= 9) {
+        // Move the appropriate pieces
+        SetBit(board, newIdx);
+        SetBit(friendlyPieces, newIdx);
+
+        ClearBit(board, oldIdx);
+        ClearBit(friendlyPieces, oldIdx);
+
+        if (GetBit(*friendlyKings, oldIdx)) {
+            SetBit(friendlyPieces, newIdx);
+            ClearBit(friendlyKings, oldIdx);
+        }
+    }
+
+
+    // if (moveDistance < 0) { // A negative moveDistance means the piece is moving backwards and must be a king
+    //
+    // }
+
+    //
+    // // Checks if the piece is a king
+    // if (GetBit(*friendlyKings, oldIdx)) {
+    //     // Verifies the new space is a valid move for a king
+    //     if (abs(newIdx - oldIdx) == 9 || abs(newIdx - oldIdx) == 7) {
+    //         ClearBit(board, oldIdx);
+    //         ClearBit(friendlyPieces, oldIdx);
+    //         ClearBit(friendlyKings, newIdx);
+    //
+    //         SetBit(board, newIdx);
+    //         SetBit(friendlyPieces, newIdx);
+    //         SetBit(friendlyKings, newIdx);
+    //
+    //         return 1;
+    //     }
+    //     printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
+    //     return 0;
+    // }
+    //
+    //
+    // // Verifies the new space is a valid move for a regular piece
+    // if (newIdx - oldIdx == 9 || newIdx - oldIdx == 7) {
+    //     ClearBit(board, oldIdx);
+    //     ClearBit(friendlyPieces, newIdx);
+    //
+    //     SetBit(board, newIdx);
+    //     SetBit(friendlyPieces, newIdx);
+    //
+    //     return 1;
+    // }
+    // printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
+    // return 0;
 }
 
-
+/* Capture logic
+ * Check distance of move
+ * If long move, is the midpoint an opponent?
+ *      No: Invalid move
+ *      Yes: Is the new space open?
+ *          No: Invalid move
+ *          Yes: Move there and capture piece
+ */
 
 #endif

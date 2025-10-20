@@ -23,10 +23,13 @@ void SetRedPieces(unsigned long long *redPieces);
 void SetBlackPieces(unsigned long long *blackPieces);
 int Space2Index(char space[]);
 int IsValidSpace(char space[]);
-int MoveRedPiece(char oldSpace[], char newSpace[],
+int MovePiece(char oldSpace[], char newSpace[],
+    int isRed,
     unsigned long long *board,
-    unsigned long long *pieces,
-    unsigned long long *kings);
+    unsigned long long *friendlyPieces,
+    unsigned long long *friendlyKings,
+    unsigned long long *opponentPieces,
+    unsigned long long *opponentKings);
 
 int main(void) {
     // Bitboards to track the main board and each player's pieces
@@ -47,13 +50,15 @@ int main(void) {
     char oldSpace[50] = "C3\0";
     char newSpace[50] = "B4\0";
 
-    MoveRedPiece(oldSpace, newSpace, &board, &redPieces, &redKings);
+    printf("Trying to move piece from %s to %s\n", oldSpace, newSpace);
+    MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
     strcpy(oldSpace, "b4\0");
     strcpy(newSpace, "c3\0");
 
-    MoveRedPiece(oldSpace, newSpace, &board, &redPieces, &redKings);
+    printf("Trying to move piece from %s to %s\n", oldSpace, newSpace);
+    MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
     // board = SetBit(board,  0);
