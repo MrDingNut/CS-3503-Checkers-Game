@@ -1,3 +1,0 @@
-* For MovePiece: Currently, the function only checks to see if the index of the new and old spaces are different by
-7 or 9. This works for most spaces, but it breaks if they're on an edge space. It technically allows them to move to
-illegal spaces

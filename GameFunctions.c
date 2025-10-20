@@ -211,25 +211,26 @@ int MoveRedPiece(char oldSpace[], char newSpace[],
     int oldIdx = Space2Index(oldSpace);
     int newIdx = Space2Index(newSpace);
 
-    // Verifies both spaces are valid
-    if (IsValidSpace(oldSpace) && IsValidSpace(newSpace)) {
-        printf("One or more of the entered spaces are invalid");
+    // Returns 0 if either space is invalid
+    if ((IsValidSpace(oldSpace) - 1)  || (IsValidSpace(newSpace) - 1)) {
+        printf("One or more of the entered spaces are invalid\n");
         return 0;
     }
 
     // Returns 0 us there's not a piece on the old space
-    if (~GetBit(*board, oldIdx)) {
+    if (GetBit(*board, oldIdx) - 1) {
         printf("There's no piece on space %s\n", oldSpace);
         return 0; }
 
     // Returns 0 if the new space is not valid
-    if (~IsValidLocation(newIdx)) {
+    if (IsValidLocation(newIdx) - 1) {
         printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
         return 0; }
 
     // Checks if the piece is a king
     if (GetBit(*kings, oldIdx)) {
-        if (abs(newIdx - oldIdx) == 9 || abs(newIdx - oldIdx) == 7) { // Verifies the new space is a valid move
+        // Verifies the new space is a valid move for a king
+        if (abs(newIdx - oldIdx) == 9 || abs(newIdx - oldIdx) == 7) {
             ClearBit(board, oldIdx);
             ClearBit(kings, newIdx);
 
@@ -238,12 +239,12 @@ int MoveRedPiece(char oldSpace[], char newSpace[],
 
             return 1;
         }
-        printf("Moving from %s to %s is an invalid move", oldSpace, newSpace);
+        printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
         return 0;
     }
 
 
-    // Verifies the new space is a valid move
+    // Verifies the new space is a valid move for a regular piece
     if (newIdx - oldIdx == 9 || newIdx - oldIdx == 7) {
         ClearBit(board, oldIdx);
         ClearBit(pieces, newIdx);
@@ -253,7 +254,7 @@ int MoveRedPiece(char oldSpace[], char newSpace[],
 
         return 1;
     }
-    printf("Moving from %s to %s is an invalid move", oldSpace, newSpace);
+    printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
     return 0;
 }
 
