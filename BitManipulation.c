@@ -62,7 +62,7 @@ void PrintBinary(unsigned long long num) {  // Show in bits
 
     bin[64] = '\0'; // Null terminate the string
 
-    printf("%d in binary is %s\n", num, bin);
+    printf("%llu in binary is %s\n", num, bin);
 }
 
 void PrintHex(unsigned long long num) {   // Show in hex
@@ -76,7 +76,7 @@ void PrintHex(unsigned long long num) {   // Show in hex
     // Handle zero case
     if (num == 0) {
         strcpy(hex, "0");
-        printf("%d in hexadecimal is %s", num, hex);
+        printf("%llu in hexadecimal is %s", num, hex);
         return;
     }
 
