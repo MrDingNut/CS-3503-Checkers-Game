@@ -5,9 +5,9 @@
 
 #include <stdio.h>
 
-unsigned long long SetBit(unsigned long long num,  int index);
-unsigned long long ClearBit(unsigned long long num,  int index);
-unsigned long long ToggleBit(unsigned long long num,  int index);
+void SetBit(unsigned long long *num,  int index);
+void ClearBit(unsigned long long *num,  int index);
+void ToggleBit(unsigned long long *num,  int index);
 int GetBit(unsigned long long num,  int index);
 int CountBits(unsigned long long num);
 void PrintBinary(unsigned long long num);
@@ -92,77 +92,69 @@ void PrintBoard(unsigned long long board,
     }
 }
 
-unsigned long long SetBoard() {
-    unsigned long long board = 0;
+void SetBoard(unsigned long long *board) {
     // Set red pieces
-   board = SetBit(board,  1);
-   board = SetBit(board,  3);
-   board = SetBit(board,  5);
-   board = SetBit(board,  7);
-   board = SetBit(board,  8);
-   board = SetBit(board,  10);
-   board = SetBit(board,  12);
-   board = SetBit(board,  14);
-   board = SetBit(board,  17);
-   board = SetBit(board,  19);
-   board = SetBit(board,  21);
-   board = SetBit(board,  23);
+   SetBit(board,  1);
+   SetBit(board,  3);
+   SetBit(board,  5);
+   SetBit(board,  7);
+   SetBit(board,  8);
+   SetBit(board,  10);
+   SetBit(board,  12);
+   SetBit(board,  14);
+   SetBit(board,  17);
+   SetBit(board,  19);
+   SetBit(board,  21);
+   SetBit(board,  23);
 
     // Set black pieces
-   board = SetBit(board,  62);
-   board = SetBit(board,  60);
-   board = SetBit(board,  58);
-   board = SetBit(board,  56);
-   board = SetBit(board,  55);
-   board = SetBit(board,  53);
-   board = SetBit(board,  51);
-   board = SetBit(board,  49);
-   board = SetBit(board,  46);
-   board = SetBit(board,  44);
-   board = SetBit(board,  42);
-   board = SetBit(board,  40);
-
-    return board;
+   SetBit(board,  62);
+   SetBit(board,  60);
+   SetBit(board,  58);
+   SetBit(board,  56);
+   SetBit(board,  55);
+   SetBit(board,  53);
+   SetBit(board,  51);
+   SetBit(board,  49);
+   SetBit(board,  46);
+   SetBit(board,  44);
+   SetBit(board,  42);
+   SetBit(board,  40);
 }
 
-unsigned long long SetRedPieces() {
-    unsigned long long redPieces = 0;
+void SetRedPieces(unsigned long long *redPieces) {
     // Set red pieces
-   redPieces = SetBit(redPieces,  1);
-   redPieces = SetBit(redPieces,  3);
-   redPieces = SetBit(redPieces,  5);
-   redPieces = SetBit(redPieces,  7);
-   redPieces = SetBit(redPieces,  8);
-   redPieces = SetBit(redPieces,  10);
-   redPieces = SetBit(redPieces,  12);
-   redPieces = SetBit(redPieces,  14);
-   redPieces = SetBit(redPieces,  17);
-   redPieces = SetBit(redPieces,  19);
-   redPieces = SetBit(redPieces,  21);
-   redPieces = SetBit(redPieces,  23);
-
-    return redPieces;
+   SetBit(redPieces,  1);
+   SetBit(redPieces,  3);
+   SetBit(redPieces,  5);
+   SetBit(redPieces,  7);
+   SetBit(redPieces,  8);
+   SetBit(redPieces,  10);
+   SetBit(redPieces,  12);
+   SetBit(redPieces,  14);
+   SetBit(redPieces,  17);
+   SetBit(redPieces,  19);
+   SetBit(redPieces,  21);
+   SetBit(redPieces,  23);
 }
 
-unsigned long long SetBlackPieces() {
-    unsigned long long blackPieces = 0;
+void SetBlackPieces(unsigned long long *blackPieces) {
 
     // Set black pieces
-   blackPieces = SetBit(blackPieces,  62);
-   blackPieces = SetBit(blackPieces,  60);
-   blackPieces = SetBit(blackPieces,  58);
-   blackPieces = SetBit(blackPieces,  56);
-   blackPieces = SetBit(blackPieces,  55);
-   blackPieces = SetBit(blackPieces,  53);
-   blackPieces = SetBit(blackPieces,  51);
-   blackPieces = SetBit(blackPieces,  49);
-   blackPieces = SetBit(blackPieces,  46);
-   blackPieces = SetBit(blackPieces,  44);
-   blackPieces = SetBit(blackPieces,  42);
-   blackPieces = SetBit(blackPieces,  40);
-
-    return blackPieces;
+   SetBit(blackPieces,  62);
+   SetBit(blackPieces,  60);
+   SetBit(blackPieces,  58);
+   SetBit(blackPieces,  56);
+   SetBit(blackPieces,  55);
+   SetBit(blackPieces,  53);
+   SetBit(blackPieces,  51);
+   SetBit(blackPieces,  49);
+   SetBit(blackPieces,  46);
+   SetBit(blackPieces,  44);
+   SetBit(blackPieces,  42);
+   SetBit(blackPieces,  40);
 }
 
+// moveRedPiece
 
 #endif

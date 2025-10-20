@@ -2,9 +2,9 @@
 
 // Base Functions
 // Remove if you don't use them in Main
-unsigned long long SetBit(unsigned long long num,  int index);
-unsigned long long ClearBit(unsigned long long num,  int index);
-unsigned long long ToggleBit(unsigned long long num,  int index);
+void SetBit(unsigned long long num,  int index);
+void ClearBit(unsigned long long num,  int index);
+void ToggleBit(unsigned long long num,  int index);
 int GetBit(unsigned long long num,  int index);
 int CountBits(unsigned long long num);
 void PrintBinary(unsigned long long num);
@@ -17,9 +17,9 @@ void PrintBoard(unsigned long long board,
     unsigned long long redKings,
     unsigned long long blackPieces,
     unsigned long long blackKings);
-unsigned long long SetBoard();
-unsigned long long SetRedPieces();
-unsigned long long SetBlackPieces();
+void SetBoard(unsigned long long *board);
+void SetRedPieces(unsigned long long *redPieces);
+void SetBlackPieces(unsigned long long *blackPieces);
 
 int main(void) {
     // Bitboards to track the main board and each player's pieces
@@ -29,9 +29,9 @@ int main(void) {
     unsigned long long blackPieces = 0;
     unsigned long long blackKings = 0;
 
-    board = SetBoard();
-    redPieces = SetRedPieces();
-    blackPieces = SetBlackPieces();
+    SetBoard(&board);
+    SetRedPieces(&redPieces);
+    SetBlackPieces(&blackPieces);
 
     // board = SetBit(board,  0);
     // board = SetBit(board,  63);

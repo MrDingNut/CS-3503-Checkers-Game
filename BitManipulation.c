@@ -6,26 +6,23 @@
 #include <string.h>
 
 // ********** Basic bit operations **********
-unsigned long long SetBit(unsigned long long num,  int index) {    // Set bit to 1
+void SetBit(unsigned long long *num,  int index) {    // Set bit to 1
     if (index <= 63 && index >= 0) { // Verifies index is valid
-        return num | (1ULL << index);
+        *num |= (1ULL << index);
     }
-    return num; // Does nothing if the index is invalid
 }
 
-unsigned long long ClearBit(unsigned long long num,  int index) {   // Set bit to 0
+void ClearBit(unsigned long long *num,  int index) {   // Set bit to 0
     if (index <= 63 && index >= 0) { // Verifies index is valid
-        return num & ~(1ULL << index);
+        *num &= ~(1ULL << index);
     }
-    return num; // Does nothing if the index is invalid
+
 }
 
-unsigned long long ToggleBit(unsigned long long num,  int index) {  // Flip bit
-    if (index > 63 || index < 0) { // Checks if index is invalid
-        return -1; // Returns bad value if the index is invalid
+void ToggleBit(unsigned long long *num,  int index) {  // Flip bit
+    if (index <= 63 || index >= 0) { // Checks if index is invalid
+        *num ^= (1ULL << index);
     }
-
-    return num ^ (1ULL << index);
 }
 
 int GetBit(unsigned long long num,  int index) {  // Get bit value
