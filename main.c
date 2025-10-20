@@ -20,6 +20,12 @@ void PrintBoard(unsigned long long board,
 void SetBoard(unsigned long long *board);
 void SetRedPieces(unsigned long long *redPieces);
 void SetBlackPieces(unsigned long long *blackPieces);
+int Space2Index(char space[]);
+int IsValidSpace(char space[]);
+int MovePiece(char oldSpace[], char newSpace[],
+    unsigned long long *board,
+    unsigned long long *pieces,
+    unsigned long long *kings);
 
 int main(void) {
     // Bitboards to track the main board and each player's pieces
@@ -29,9 +35,19 @@ int main(void) {
     unsigned long long blackPieces = 0;
     unsigned long long blackKings = 0;
 
+    // Set up the board
     SetBoard(&board);
     SetRedPieces(&redPieces);
     SetBlackPieces(&blackPieces);
+
+    PrintBoardIndex();
+    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+
+    char oldSpace[] = "a3\0";
+    char newSpace[] = "h3\0";
+
+    MovePiece(oldSpace, newSpace, &board, &redPieces, &redKings);
+    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
     // board = SetBit(board,  0);
     // board = SetBit(board,  63);
@@ -46,21 +62,22 @@ int main(void) {
     // blackPieces = SetBit(blackPieces,  63);
     //
 
-    PrintBoardIndex();
-    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
 
-    printf("Board: ");
-    PrintBinary(board);
-
-    printf("\nRed Pieces: ");
-    PrintBinary(redPieces);
-
-    printf("\nRed Kings: ");
-    PrintBinary(redKings);
-
-    printf("\nBlack Pieces: ");
-    PrintBinary(blackPieces);
-
-    printf("\nBlack Kings: ");
-    PrintBinary(blackKings);
+    //
+    // printf("Board: ");
+    // PrintBinary(board);
+    //
+    // printf("\nRed Pieces: ");
+    // PrintBinary(redPieces);
+    //
+    // printf("\nRed Kings: ");
+    // PrintBinary(redKings);
+    //
+    // printf("\nBlack Pieces: ");
+    // PrintBinary(blackPieces);
+    //
+    // printf("\nBlack Kings: ");
+    // PrintBinary(blackKings);
+    //
+    // printf("\n%d", ('1' - '0'));
 }

@@ -4,6 +4,8 @@
 #define GAMEFUNCTIONS_C
 
 #include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 void SetBit(unsigned long long *num,  int index);
 void ClearBit(unsigned long long *num,  int index);
@@ -15,29 +17,31 @@ void PrintHex(unsigned long long num);
 
 // Debugging function to remind me how the board is indexed
 void PrintBoardIndex() {
-    // {"[w] [ ] [w] [ ] [w] [ ] [w] [ ]"}
-    // {"[ ] [w] [ ] [w] [ ] [w] [ ] [w]"}
-    // {"[w] [ ] [w] [ ] [w] [ ] [w] [ ]"}
-    // {"[ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]"}
-    // {"[ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]"}
-    // {"[ ] [m] [ ] [m] [ ] [m] [ ] [m]"}
-    // {"[m] [ ] [m] [ ] [m] [ ] [m] [ ]"}
-    // {"[ ] [m] [ ] [m] [ ] [m] [ ] [m]"}
+    //    a   b   c   d   e   f   g   h
+    // 8 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+    // 7 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
+    // 6 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+    // 5 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+    // 4 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+    // 3 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+    // 2 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
+    // 1 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
 
-    printf("[63] [62] [61] [60] [59] [58] [57] [56]\n");
-    printf("[55] [54] [53] [52] [51] [50] [49] [48]\n");
-    printf("[47] [46] [45] [44] [43] [42] [41] [40]\n");
-    printf("[39] [38] [37] [36] [35] [34] [33] [32]\n");
-    printf("[31] [30] [29] [28] [27] [26] [25] [24]\n");
-    printf("[23] [22] [21] [20] [19] [18] [17] [16]\n");
-    printf("[15] [14] [13] [12] [11] [10] [09] [08]\n");
-    printf("[07] [06] [05] [04] [03] [02] [01] [00]\n\n");
+    printf("   a    b    c    d    e    f    g    h\n");
+    printf("8 [63] [62] [61] [60] [59] [58] [57] [56]\n");
+    printf("7 [55] [54] [53] [52] [51] [50] [49] [48]\n");
+    printf("6 [47] [46] [45] [44] [43] [42] [41] [40]\n");
+    printf("5 [39] [38] [37] [36] [35] [34] [33] [32]\n");
+    printf("4 [31] [30] [29] [28] [27] [26] [25] [24]\n");
+    printf("3 [23] [22] [21] [20] [19] [18] [17] [16]\n");
+    printf("2 [15] [14] [13] [12] [11] [10] [09] [08]\n");
+    printf("1 [07] [06] [05] [04] [03] [02] [01] [00]\n\n");
 }
 
 // Print the current piece to the console
 // I intentionally used multiple if statements instead of if else statements
 // This way, if multiple bitboards have pieces in the same space, they will
-// both be printed which will hopefully make debugging
+// both be printed which will hopefully make debugging easier
 void PrintPiece(int idx, unsigned long long redPieces,
     unsigned long long redKings,
     unsigned long long blackPieces,
@@ -63,15 +67,17 @@ void PrintBoard(unsigned long long board,
     // w pieces are black
     // m pieces are red
     // Capitol pieces are kings
-    // {"[w] [ ] [w] [ ] [w] [ ] [w] [ ]"}
-    // {"[ ] [w] [ ] [w] [ ] [w] [ ] [w]"}
-    // {"[w] [ ] [w] [ ] [w] [ ] [w] [ ]"}
-    // {"[ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]"}
-    // {"[ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]"}
-    // {"[ ] [m] [ ] [m] [ ] [m] [ ] [m]"}
-    // {"[m] [ ] [m] [ ] [m] [ ] [m] [ ]"}
-    // {"[ ] [m] [ ] [m] [ ] [m] [ ] [m]"}
+    //    a   b   c   d   e   f   g   h
+    // 8 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+    // 7 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
+    // 6 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+    // 5 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+    // 4 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+    // 3 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+    // 2 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
+    // 1 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
 
+    printf("   a   b   c   d   e   f   g   h\n8 ");
     for (int i = 63; i >= 0 ; i--) {
         // printf("i=%d", i);
 
@@ -88,6 +94,9 @@ void PrintBoard(unsigned long long board,
 
         if ((i) % 8 == 0 && i != 63) {
             printf("\n");
+            if (i/8) {
+                printf("%d ", i/8);
+            }
         }
     }
 }
@@ -155,6 +164,87 @@ void SetBlackPieces(unsigned long long *blackPieces) {
    SetBit(blackPieces,  40);
 }
 
-// moveRedPiece
+void MoveRedPiece(unsigned long long *board,
+    unsigned long long *pieces,
+    unsigned long long *kings) {
+
+}
+
+// Converts space name (eg. C7) to the index of the corresponding bit for the bitboards
+int Space2Index(char space[]) {
+    char letter = space[0];         // Gets the letter from the space name
+    letter      = toupper(letter);  // Forces the letter to be uppercase. Allows the input to be case independent
+    int num     = space[1] - '0';   // Gets the number from the space name and converts it to an integer
+    return (7 + ((num-1) * 8)) - (letter - 'A'); // Converts the letter and number to the corresponding index
+    // The first set of parenthesis convert the number to the number of the left most index on the appropriate row
+    // Ex, 2 turns to 15, 5, turns to 39, etc.
+    // The second set of parenthesis moves the index to the proper space on the appropriate row
+    // Ex, A leaves the index where it is, E moves the index to the right 4, etc.
+}
+
+// Verifies the space is valid
+int IsValidSpace(char space[]) {
+    char letter = space[0];         // Gets the letter from the space name
+    int num     = space[1] - '0';   // Gets the number from the space name and converts it to an integer
+      // Checks if letter is from 'A' to 'H'         Checks if letter is from 'a' to 'h'
+    if ((letter - 'A' >= 0 && letter - 'A' <= 7) || (letter - 'a' >= 0 && letter - 'a' <= 7)) { // Verifies the letter is valid
+        if (num >= 1 && num <= 8) { // Varifies the number is valid
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Returns 1 if idx is equal to any of the valid space indexes
+int IsValidLocation(int idx) {
+    int validIndex[] = {1,3,5,7,8,10,12,14,17,19,21,23,24,26,28,30,33,35,37,39,40,42,44,46,49,51,53,55,56,58,60,62};
+
+    int length = sizeof(validIndex) / sizeof(validIndex[0]);
+    for (int i = 0; i < length; i++) {
+        if (idx == validIndex[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Moves the piece
+int MovePiece(char oldSpace[], char newSpace[],
+    unsigned long long *board,
+    unsigned long long *pieces,
+    unsigned long long *kings) {
+    if (IsValidSpace(oldSpace) && IsValidSpace(newSpace)) { // Verifies both spaces are valid
+        int oldIdx = Space2Index(oldSpace);
+        int newIdx = Space2Index(newSpace);
+        if (GetBit(*board, oldIdx)) { // Verifies there's a piece on the old space
+            if (abs(oldIdx - newIdx) == 9 || abs(oldIdx - newIdx) == 7) { // Verifies the new space is a valid move
+                if (IsValidLocation(newIdx)) {
+                    ClearBit(board, oldIdx);
+                    ClearBit(pieces, newIdx);
+
+                    SetBit(board, newIdx);
+                    SetBit(pieces, newIdx);
+
+                    return 1;
+                } else {
+                    printf("Moving from %s to %s is an invalid move2\n", oldSpace, newSpace);
+                    return 0;
+                }
+            } else {
+                printf("Moving from %s to %s is an invalid move\n", oldSpace, newSpace);
+                return 0;
+            }
+
+        } else {
+            printf("There's no piece on space %s\n", oldSpace);
+            return 0;
+        }
+
+    } else {
+        printf("Invalid Space\n");
+
+    }
+    return 0;
+}
 
 #endif
