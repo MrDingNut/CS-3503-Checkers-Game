@@ -26,13 +26,13 @@ Here are the house rules:
 - Fulfills all requirements!
 
 ## Build Instructions
-'''bash
+```bash
 
 gcc main.c GameFunctions.c BitManipulation.c -o checkers
 
 ./checkers
 
-'''
+```
 
 ## Test Results
 The fun test passed with flying colors!
