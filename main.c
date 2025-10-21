@@ -67,7 +67,8 @@ int main(void) {
     printf("6. Player W goes first\n");
     printf("7. This is a two player game\n");
     printf("8. Capitol letters are kings\n");
-    printf("9. Enter \"Ready\" when you're ready to begin!\n");
+    printf("9. Enter \"No\" at any point during the game to quit\n");
+    printf("10. Enter \"Ready\" when you're ready to begin!\n");
     fflush(stdout);
     fgets(userInput, 50, stdin);
     userInput[strcspn(userInput, "\n")] = 0;
@@ -89,11 +90,23 @@ int main(void) {
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(oldSpace, userInput);
 
+            // Stops the game if "No" is entered
+            if (strcmp(oldSpace, "No\0") == 0) {
+                gameWon = 1;
+                break;
+            }
+
             printf("Player W, where would you like to move %s to?: ", oldSpace);
             fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
+
+            // Stops the game if "No" is entered
+            if (strcmp(oldSpace, "No\0") == 0) {
+                gameWon = 1;
+                break;
+            }
 
             printf("Moving %s to %s\n", oldSpace, newSpace);
             validMove = MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
@@ -114,11 +127,23 @@ int main(void) {
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(oldSpace, userInput);
 
+            // Stops the game if "No" is entered
+            if (strcmp(oldSpace, "No\0") == 0) {
+                gameWon = 1;
+                break;
+            }
+
             printf("Player M, where would you like to move %s to?: ", oldSpace);
             fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
+
+            // Stops the game if "No" is entered
+            if (strcmp(oldSpace, "No\0") == 0) {
+                gameWon = 1;
+                break;
+            }
 
             printf("Moving %s to %s\n", oldSpace, newSpace);
             validMove = MovePiece(oldSpace, newSpace, 0, &board, &blackPieces, &blackKings, &redPieces, &redKings);
