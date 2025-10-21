@@ -1,0 +1,22 @@
+Red is w/W
+Black is m/M
+
+************** Easy Pastes **************
+Move redPiece
+MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
+
+Move blackPiece
+MovePiece(oldSpace, newSpace, 0, &board, &blackPieces, &blackKings, &redPieces, &redKings);
+
+Paste these after every move
+PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
+PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+CheckWin(redPieces, blackPieces);
+
+Read input and convert to string
+fgets(userInput, 50, stdin);
+userInput[strcspn(userInput, "\n")] = 0;
+
+************** If time permits **************
+* Fix IsValidLocation so validIndex has the correct indexes instead of the incorrect indexes
+* Implement save game

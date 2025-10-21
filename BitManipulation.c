@@ -40,7 +40,7 @@ int GetBit(unsigned long long num,  int index) {  // Get bit value
 // ********** Counting and finding **********
 int CountBits(unsigned long long num) {   // Count 1s
     int count = 0;
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 64; i++) {
         if (GetBit(num, i)) {
             count++;
         }
@@ -53,7 +53,7 @@ void PrintBinary(unsigned long long num) {  // Show in bits
     // Most of this code was yoinked from Assignment 2
     char bin[65];
 
-    for (int i = 63; i >= 0; i--) { // Convert to 32 bit binary
+    for (int i = 63; i >= 0; i--) { // Convert to 64 bit binary
         bin[63-i] = ((num >> i) & 1) ? '1' : '0';
     }
 

@@ -103,6 +103,7 @@ void PrintBoard(unsigned long long board,
             }
         }
     }
+    printf("\n");
 }
 
 void SetBoard(unsigned long long *board) {
@@ -200,13 +201,21 @@ int IsValidLocation(int idx) {
     int length = sizeof(validIndex) / sizeof(validIndex[0]);
     for (int i = 0; i < length; i++) {
         if (idx == validIndex[i]) {
-            return 1;
+            return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 // Moves the piece
+/* NOTE:
+ * The if statements were used instead of nested if statements for readability
+ *
+ * I'm not a fan of how long this method is though
+ *
+ * Is there another way you would recommend doing this?
+ * The only way I could think of was having the function check for every possible invalid move before moving the piece
+ */
 int MovePiece(char oldSpace[], char newSpace[],
     int isRed,
     unsigned long long *board,
@@ -238,10 +247,16 @@ int MovePiece(char oldSpace[], char newSpace[],
         printf("%s is not a valid space name\n", newSpace);
         return 0; }
 
-    // Returns 0 us there's not a piece on the old space
+    // Returns 0 if there's not a piece on the old space
     if (!GetBit(*board, oldIdx)) {
         printf("There's no piece on space %s\n", oldSpace);
         return 0; }
+
+    // Returns 0 if the piece being moved isn't the current player's
+    if (!GetBit(*friendlyPieces, oldIdx)) {
+        printf("The piece on %s isn't yours\n", oldSpace);
+        return 0;
+    }
 
     // Returns 0 if the new space is not valid
     if (!IsValidLocation(newIdx)) {
@@ -250,7 +265,7 @@ int MovePiece(char oldSpace[], char newSpace[],
 
     // Returns 0 if the piece isn't a king and is moving in the wrong direction
     if (!GetBit(*friendlyKings, oldIdx)) { // Fires if the piece isn't a king
-        if (moveDistance * direction < 0) { // Fires if the piece is moving in the wrong direction (red must move up, black must move down)
+        if (moveDistance < 0) { // Fires if the piece is moving in the wrong direction (red must move up, black must move down)
             printf("The piece on space %s cannot move in that direction\n", oldSpace);
             return 0;
         }
@@ -281,7 +296,12 @@ int MovePiece(char oldSpace[], char newSpace[],
         // Move and remove the appropriate pieces
         SetBit(board, newIdx);
         SetBit(friendlyPieces, newIdx);
-        SetBit(friendlyKings, newIdx);
+
+        // Moves king if the moved piece was a king
+        if (GetBit(*friendlyKings, oldIdx)) {
+            SetBit(friendlyPieces, newIdx);
+            ClearBit(friendlyKings, oldIdx);
+        }
 
         ClearBit(board, oldIdx);
         ClearBit(friendlyPieces, oldIdx);
@@ -289,11 +309,6 @@ int MovePiece(char oldSpace[], char newSpace[],
         ClearBit(opponentPieces, midIdx);
         ClearBit(opponentPieces, midIdx);
         ClearBit(opponentKings, midIdx);
-
-        if (GetBit(*friendlyKings, oldIdx)) {
-            SetBit(friendlyPieces, newIdx);
-            ClearBit(friendlyKings, oldIdx);
-        }
     }
 
     // Regular move
@@ -305,6 +320,7 @@ int MovePiece(char oldSpace[], char newSpace[],
         ClearBit(board, oldIdx);
         ClearBit(friendlyPieces, oldIdx);
 
+        // Moves king if the moved piece was a king
         if (GetBit(*friendlyKings, oldIdx)) {
             SetBit(friendlyPieces, newIdx);
             ClearBit(friendlyKings, oldIdx);
@@ -337,5 +353,23 @@ void PromoteKings(unsigned long long *redPieces,
     }
 }
 
+// Checks if a player has won by checking
+int CheckWin(unsigned long long redPieces, unsigned long long blackPieces) {
+    if (CountBits(blackPieces) == 0) {
+        printf("\n**************************\n");
+        printf("     PLAYER W WINS!\n");
+        printf("**************************");
+        return 1;
+    }
+
+    if (CountBits(redPieces) == 0) {
+        printf("\n**************************\n");
+        printf("     PLAYER M WINS!\n");
+        printf("**************************");
+        return 2;
+    }
+
+    return 0;
+}
 
 #endif

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// Red   is W/w
+// Black is M/m
+
 // Base Functions
 // Remove if you don't use them in Main
 void SetBit(unsigned long long *num,  int index);
@@ -30,6 +33,11 @@ int MovePiece(char oldSpace[], char newSpace[],
     unsigned long long *friendlyKings,
     unsigned long long *opponentPieces,
     unsigned long long *opponentKings);
+void PromoteKings(unsigned long long *redPieces,
+    unsigned long long *redKings,
+    unsigned long long *blackPieces,
+    unsigned long long *blackKings);
+int CheckWin(unsigned long long redPieces, unsigned long long blackPieces);
 
 int main(void) {
     // Bitboards to track the main board and each player's pieces
@@ -40,32 +48,78 @@ int main(void) {
     unsigned long long blackKings = 0;
 
     // Set up the board
-    // SetBoard(&board);
-    // SetRedPieces(&redPieces);
-    // SetBlackPieces(&blackPieces);
+    SetBoard(&board);
+    SetRedPieces(&redPieces);
+    SetBlackPieces(&blackPieces);
 
-    SetBit(&board, 19);
-    SetBit(&blackPieces, 19);
+    int gameWon = 0;
+    int validMove = 0;
+    int wonGame = 0;
+    char userInput[50];
+    char oldSpace[50];
+    char newSpace[50];
 
-    SetBit(&board, 54);
-    SetBit(&redPieces, 54);
-    // SetBit(&redKings, 28);
-
-    PrintBoardIndex();
     PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+    printf("Welcome to Checkers!\n");
+    printf("Here are the house rules:\n");
+    printf("1. Jumping is optional\n");
+    printf("2. Pieces are called by the space they occupy");
+    printf("3. Double jumps are not allowed\n");
+    printf("4. No complaining about the lack of double jumps...\n");
+    printf("5. No double jumps was a *creative* decision\n");
+    printf("6. Player W goes first\n");
+    printf("7. This is a two player game\n");
+    printf("8. Capitol letters are kings\n");
+    printf("9. Enter \"Ready\" when you're ready to begin!\n");
+    fgets(userInput, 50, stdin);
+    userInput[strcspn(userInput, "\n")] = 0;
 
-    char oldSpace[50] = "b7\0";
-    char newSpace[50] = "a8\0";
 
-    printf("Trying to move piece from %s to %s\n", oldSpace, newSpace);
-    MovePiece(oldSpace, newSpace, 0, &board, &redPieces, &redKings, &blackPieces, &blackKings);
-    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+    while (!gameWon) {
+        // **************** Red Player's Turn ****************
+        while (!validMove) {
+            PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+            printf("Player W, what piece would you like to move?: ");
+            fgets(userInput, 50, stdin);
+            userInput[strcspn(userInput, "\n")] = 0;
+            strcpy(oldSpace, userInput);
 
-    strcpy(oldSpace, "b4\0");
-    strcpy(newSpace, "c3\0");
+            printf("Player W, where would you like to move %s to?: ", oldSpace);
+            fgets(userInput, 50, stdin);
+            userInput[strcspn(userInput, "\n")] = 0;
+            strcpy(newSpace, userInput);
 
-    printf("Trying to move piece from %s to %s\n", oldSpace, newSpace);
-    MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
-    PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+            validMove = MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
+        }
+        validMove = 0;
+        PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
+        PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+        gameWon = CheckWin(redPieces, blackPieces);
+        if (gameWon) {
+            break;
+        }
 
+        // **************** Black Player's Turn ****************
+        while (!validMove) {
+            printf("Player M, what piece would you like to move?: ");
+            fgets(userInput, 50, stdin);
+            userInput[strcspn(userInput, "\n")] = 0;
+            strcpy(oldSpace, userInput);
+
+            printf("Player M, where would you like to move %s to?: ", oldSpace);
+            fgets(userInput, 50, stdin);
+            userInput[strcspn(userInput, "\n")] = 0;
+            strcpy(newSpace, userInput);
+
+
+            validMove = MovePiece(oldSpace, newSpace, 0, &board, &blackPieces, &blackKings, &redPieces, &redKings);
+        }
+        validMove = 0;
+        PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
+        PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+        gameWon = CheckWin(redPieces, blackPieces);
+        if (gameWon) {
+            break;
+        }
+    }
 }
