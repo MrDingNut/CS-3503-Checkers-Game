@@ -18,14 +18,14 @@ void PrintHex(unsigned long long num);
 // Debugging function to remind me how the board is indexed
 void PrintBoardIndex() {
     //    a   b   c   d   e   f   g   h
-    // 8 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
-    // 7 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
-    // 6 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
+    // 8 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+    // 7 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
+    // 6 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
     // 5 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
     // 4 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
-    // 3 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
-    // 2 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
-    // 1 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
+    // 3 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+    // 2 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
+    // 1 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
 
     printf("   a    b    c    d    e    f    g    h\n");
     printf("8 [63] [62] [61] [60] [59] [58] [57] [56]\n");
@@ -81,7 +81,9 @@ void PrintBoard(unsigned long long board,
     // 2 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
     // 1 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
 
-    printf("   a   b   c   d   e   f   g   h\n8 ");
+    // printf("   a   b   c   d   e   f   g   h\n8 ");
+    printf("   a   b   c   d   e   f   g   h\n");
+    printf("8 ");
     for (int i = 63; i >= 0 ; i--) {
         // printf("i=%d", i);
 
@@ -167,6 +169,34 @@ void SetBlackPieces(unsigned long long *blackPieces) {
    SetBit(blackPieces,  44);
    SetBit(blackPieces,  42);
    SetBit(blackPieces,  40);
+}
+
+void SetTestBoard(unsigned long long *board) {
+    // Set Red Pieces
+    SetBit(board, 30);
+    SetBit(board, 28);
+    SetBit(board, 26);
+    SetBit(board, 24);
+
+    // Set Black Pieces
+    SetBit(board, 39);
+    SetBit(board, 37);
+    SetBit(board, 35);
+    SetBit(board, 33);
+}
+
+void SetTestPieces(unsigned long long *redPieces, unsigned long long *blackPieces) {
+    // Set Red Pieces
+    SetBit(redPieces, 30);
+    SetBit(redPieces, 28);
+    SetBit(redPieces, 26);
+    SetBit(redPieces, 24);
+
+    // Set Black Pieces
+    SetBit(blackPieces, 39);
+    SetBit(blackPieces, 37);
+    SetBit(blackPieces, 35);
+    SetBit(blackPieces, 33);
 }
 
 // Converts space name (e.g. C7) to the index of the corresponding bit for the bitboards
@@ -283,8 +313,8 @@ int MovePiece(char oldSpace[], char newSpace[],
         return 0;
     }
 
-    // Capture protocol
-    if (moveDistance > 9) {
+    // Capture move
+    if (abs(moveDistance) > 9) {
         int midIdx = (newIdx + oldIdx) / 2;
 
         // Returns 0 if the space being jumped isn't occupied by the opponent
@@ -312,7 +342,7 @@ int MovePiece(char oldSpace[], char newSpace[],
     }
 
     // Regular move
-    if (moveDistance <= 9) {
+    if (abs(moveDistance) <= 9) {
         // Move the appropriate pieces
         SetBit(board, newIdx);
         SetBit(friendlyPieces, newIdx);
@@ -336,8 +366,8 @@ void PromoteKings(unsigned long long *redPieces,
     unsigned long long *blackKings) {
 
     // Indexes of promotion spaces
-    int redIdx[] = {63, 61, 59, 57};
-    int blackIdx[] = {0, 2, 4, 6};
+    int redIdx[] = {56, 58, 60, 62};
+    int blackIdx[] = {1, 3, 5, 7};
 
     // Check and set red kings
     for (int i = 0; i < 4; i++) {

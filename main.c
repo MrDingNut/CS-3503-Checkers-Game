@@ -28,6 +28,9 @@ void PromoteKings(unsigned long long *redPieces,
     unsigned long long *blackKings);
 int CheckWin(unsigned long long redPieces, unsigned long long blackPieces);
 
+void SetTestBoard(unsigned long long *board);
+void SetTestPieces(unsigned long long *redPieces, unsigned long long *blackPieces);
+
 int main(void) {
 
     // Bitboards to track the main board and each player's pieces
@@ -41,6 +44,10 @@ int main(void) {
     SetBoard(&board);
     SetRedPieces(&redPieces);
     SetBlackPieces(&blackPieces);
+
+    // Set up test board for debugging
+    // SetTestBoard(&board);
+    // SetTestPieces(&redPieces, &blackPieces);
 
     int gameWon = 0;
     int validMove = 0;
@@ -88,6 +95,7 @@ int main(void) {
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
 
+            printf("Moving %s to %s\n", oldSpace, newSpace);
             validMove = MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
         }
         validMove = 0;
@@ -112,7 +120,7 @@ int main(void) {
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
 
-
+            printf("Moving %s to %s\n", oldSpace, newSpace);
             validMove = MovePiece(oldSpace, newSpace, 0, &board, &blackPieces, &blackKings, &redPieces, &redKings);
         }
         validMove = 0;
