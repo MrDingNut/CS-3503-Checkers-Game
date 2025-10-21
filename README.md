@@ -4,8 +4,8 @@
 Mitch Walker
 
 ## Description
-   a   b   c   d   e   f   g   h
-8 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+   a   b   c   d   e   f   g   h\n
+8 [ ] [m] [ ] [m] [ ] [m] [ ] [m]\n
 7 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
 6 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
 5 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
