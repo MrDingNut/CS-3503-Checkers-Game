@@ -20,7 +20,7 @@ void ClearBit(unsigned long long *num,  int index) {   // Set bit to 0
 }
 
 void ToggleBit(unsigned long long *num,  int index) {  // Flip bit
-    if (index <= 63 || index >= 0) { // Checks if index is invalid
+    if (index <= 63 && index >= 0) { // Checks if index is invalid
         *num ^= (1ULL << index);
     }
 }

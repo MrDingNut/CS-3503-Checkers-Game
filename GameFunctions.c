@@ -201,10 +201,10 @@ int IsValidLocation(int idx) {
     int length = sizeof(validIndex) / sizeof(validIndex[0]);
     for (int i = 0; i < length; i++) {
         if (idx == validIndex[i]) {
-            return 0;
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 // Moves the piece
@@ -279,7 +279,7 @@ int MovePiece(char oldSpace[], char newSpace[],
 
     // Returns 0 if the new space is taken
     if (GetBit(*board, newIdx)) {
-        printf("%s is note an open space\n");
+        printf("%s is not an open space\n", newSpace);
         return 0;
     }
 
@@ -299,7 +299,7 @@ int MovePiece(char oldSpace[], char newSpace[],
 
         // Moves king if the moved piece was a king
         if (GetBit(*friendlyKings, oldIdx)) {
-            SetBit(friendlyPieces, newIdx);
+            SetBit(friendlyKings, newIdx);
             ClearBit(friendlyKings, oldIdx);
         }
 
@@ -322,10 +322,11 @@ int MovePiece(char oldSpace[], char newSpace[],
 
         // Moves king if the moved piece was a king
         if (GetBit(*friendlyKings, oldIdx)) {
-            SetBit(friendlyPieces, newIdx);
+            SetBit(friendlyKings, newIdx);
             ClearBit(friendlyKings, oldIdx);
         }
     }
+    return 1;
 }
 
 // Checks if there's a piece on a promotion space and promotes it if applicable

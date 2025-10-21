@@ -4,18 +4,7 @@
 // Red   is W/w
 // Black is M/m
 
-// Base Functions
-// Remove if you don't use them in Main
-void SetBit(unsigned long long *num,  int index);
-void ClearBit(unsigned long long *num,  int index);
-void ToggleBit(unsigned long long *num,  int index);
-int GetBit(unsigned long long num,  int index);
-int CountBits(unsigned long long num);
-void PrintBinary(unsigned long long num);
-void PrintHex(unsigned long long num);
-
 // Game functions
-void PrintBoardIndex();
 void PrintBoard(unsigned long long board,
     unsigned long long redPieces,
     unsigned long long redKings,
@@ -40,6 +29,7 @@ void PromoteKings(unsigned long long *redPieces,
 int CheckWin(unsigned long long redPieces, unsigned long long blackPieces);
 
 int main(void) {
+
     // Bitboards to track the main board and each player's pieces
     unsigned long long board = 0;
     unsigned long long redPieces = 0;
@@ -63,7 +53,7 @@ int main(void) {
     printf("Welcome to Checkers!\n");
     printf("Here are the house rules:\n");
     printf("1. Jumping is optional\n");
-    printf("2. Pieces are called by the space they occupy");
+    printf("2. Pieces are called by the space they occupy\n");
     printf("3. Double jumps are not allowed\n");
     printf("4. No complaining about the lack of double jumps...\n");
     printf("5. No double jumps was a *creative* decision\n");
@@ -71,6 +61,7 @@ int main(void) {
     printf("7. This is a two player game\n");
     printf("8. Capitol letters are kings\n");
     printf("9. Enter \"Ready\" when you're ready to begin!\n");
+    fflush(stdout);
     fgets(userInput, 50, stdin);
     userInput[strcspn(userInput, "\n")] = 0;
 
@@ -78,13 +69,21 @@ int main(void) {
     while (!gameWon) {
         // **************** Red Player's Turn ****************
         while (!validMove) {
+            PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
             PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+            gameWon = CheckWin(redPieces, blackPieces);
+            if (gameWon) {
+                break;
+            }
+
             printf("Player W, what piece would you like to move?: ");
+            fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(oldSpace, userInput);
 
             printf("Player W, where would you like to move %s to?: ", oldSpace);
+            fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
@@ -92,21 +91,23 @@ int main(void) {
             validMove = MovePiece(oldSpace, newSpace, 1, &board, &redPieces, &redKings, &blackPieces, &blackKings);
         }
         validMove = 0;
-        PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
-        PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
-        gameWon = CheckWin(redPieces, blackPieces);
-        if (gameWon) {
-            break;
-        }
 
         // **************** Black Player's Turn ****************
         while (!validMove) {
+            PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
+            PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
+            gameWon = CheckWin(redPieces, blackPieces);
+            if (gameWon) {
+                break;
+            }
             printf("Player M, what piece would you like to move?: ");
+            fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(oldSpace, userInput);
 
             printf("Player M, where would you like to move %s to?: ", oldSpace);
+            fflush(stdout);
             fgets(userInput, 50, stdin);
             userInput[strcspn(userInput, "\n")] = 0;
             strcpy(newSpace, userInput);
@@ -116,10 +117,5 @@ int main(void) {
         }
         validMove = 0;
         PromoteKings(&redPieces, &redKings, &blackPieces, &blackKings);
-        PrintBoard(board, redPieces, redKings, blackPieces, blackKings);
-        gameWon = CheckWin(redPieces, blackPieces);
-        if (gameWon) {
-            break;
-        }
     }
 }
