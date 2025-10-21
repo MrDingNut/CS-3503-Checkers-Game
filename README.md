@@ -7,7 +7,7 @@ Mitch Walker
 Welcome to Checkers!
 Here are the house rules:
 1. Jumping is optional
-2. Pieces are called by the space they occupy
+2. Pieces are called by the space they occupy starting with the letter (e.g. E5)
 3. Double jumps are not allowed
 4. No complaining about the lack of double jumps...
 5. No double jumps was a *creative* decision
