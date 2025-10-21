@@ -4,14 +4,22 @@
 Mitch Walker
 
 ## Description
-   a   b   c   d   e   f   g   h\n
-8 [ ] [m] [ ] [m] [ ] [m] [ ] [m]\n
+   a   b   c   d   e   f   g   h
+   
+8 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+
 7 [m] [ ] [m] [ ] [m] [ ] [m] [ ]
+
 6 [ ] [m] [ ] [m] [ ] [m] [ ] [m]
+
 5 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+
 4 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+
 3 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
+
 2 [ ] [w] [ ] [w] [ ] [w] [ ] [w]
+
 1 [w] [ ] [w] [ ] [w] [ ] [w] [ ]
 
 Welcome to Checkers!
